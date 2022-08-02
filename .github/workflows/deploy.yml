@@ -38,10 +38,11 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: lambda1
-          IMAGE_TAG: uat
+          IMAGE_TAG: latest
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           
-        - name: Update lambda function
-          uses: aws lambda update-function-code -- function-name  lambda1 -- image-uri 178572548252.dkr.ecr.us-east-1.amazonaws.com/platform/lambda1:{IMAGE_TAG} 
+        -name: Login to Lambda
+          id: aws lambda update-function-code
+          run: -- function-name  lambda1 -- image-uri 178572548252.dkr.ecr.us-east-1.amazonaws.com/platform/lambda1:{IMAGE_TAG} 
