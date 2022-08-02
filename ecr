@@ -1,5 +1,5 @@
 locals {
-  repositories = toset(["lambda1", "lambda2"])
+  repositories = toset(["lambda", "lambda1"])
 }
 
 resource "aws_ecr_repository" "myrepository" {
