@@ -1,0 +1,34 @@
+locals {
+  repositories = toset(["lambda1", "lambda2"])
+}
+
+resource "aws_ecr_repository" "myrepository" {
+  for_each = local.repositories
+  name = each.value
+}
+
+resource "aws_ecr_lifecycle_policy" "image_removal_policy" {
+  for_each = local.repositories
+  repository = aws_ecr_repository.myrepository[each.value].name
+
+  policy = jsonencode(
+  {
+  "rules": [
+    {
+      "rulePriority": 1,
+                "description": "Keep last 10 images",
+                "selection": {
+                    "tagStatus": "any",
+                    "countType": "imageCountMoreThan",
+                    "countNumber": 10
+      },
+      "action": {
+        "type": "expire"
+      }
+    }
+  ]})
+}
+Footer
+© 2022 GitHub, Inc.
+Footer navigation
+Terms
