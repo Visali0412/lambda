@@ -37,10 +37,11 @@ jobs:
       - name: Build and push to latest tag to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: lambda1
+          ECR_REPOSITORY: platform/amazon-fba-get-products
           IMAGE_TAG: latest
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           
-        
+       - name: Update lambda function code
+           run: aws lambda update-function-code --function-name  amazon-fba-get-products --image-uri 178572548252.dkr.ecr.us-east-1.amazonaws.com/platform/amazon-fba-get-products:{IMAGE_TAG} 
